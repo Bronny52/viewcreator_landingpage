@@ -69,6 +69,58 @@ function initMobileMenu(button, menu) {
     });
 }
 
+function initSeamlessMarquee() {
+    const marqueeContainer = document.querySelector('.animate-marquee');
+    if (!marqueeContainer) return;
+
+    // Remove CSS animation immediately
+    marqueeContainer.style.animation = 'none';
+    marqueeContainer.style.willChange = 'transform';
+    
+    // Wait for layout to render
+    setTimeout(() => {
+        // Clone items to create 4 full sets for smooth infinite scroll
+        const originalItems = Array.from(marqueeContainer.children);
+        const itemsPerSet = originalItems.length / 2; // Currently have 2 sets
+        
+        // Add 2 more sets (total of 4 sets)
+        for (let i = 0; i < 2; i++) {
+            originalItems.forEach(item => {
+                const clone = item.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                marqueeContainer.appendChild(clone);
+            });
+        }
+        
+        // Get all items after cloning
+        const allItems = Array.from(marqueeContainer.children);
+        const oneSetItems = allItems.slice(0, itemsPerSet);
+        
+        // Calculate exact width of ONE set
+        const firstRect = oneSetItems[0].getBoundingClientRect();
+        const lastRect = oneSetItems[itemsPerSet - 1].getBoundingClientRect();
+        const oneSetWidth = lastRect.right - firstRect.left + 96; // +96px for gap after last item
+        
+        let position = 0;
+        const speed = 1.5;
+        
+        function animate() {
+            position -= speed;
+            
+            // When we've scrolled past one full set, jump forward by one set width
+            // We have 4 sets total, so jumping forward keeps 3 sets still visible
+            if (position <= -oneSetWidth) {
+                position += oneSetWidth;
+            }
+            
+            marqueeContainer.style.transform = `translate3d(${position}px, 0, 0)`;
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    }, 100);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     startTypewriter(document.getElementById('heroInput'));
     initSpotlight(document.getElementById('global-spotlight'));
@@ -76,4 +128,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('mobileMenuButton'),
         document.getElementById('mobileMenu')
     );
+    initSeamlessMarquee();
 });
