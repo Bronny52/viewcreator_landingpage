@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViewCreator.ai | The Creator's Cockpit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        'void-light': '#0a0a0a',
+                        'viral-green': '#00FF94',
+                        'viral-green-dim': 'rgba(0, 255, 148, 0.1)',
+                        'glass-border': 'rgba(255, 255, 255, 0.08)',
+                        /* Module Theme Colors */
+                        'yt-red': '#FF0000',
+                        'x-yellow': '#F7B53B',
+                        'fb-blue': '#1877F2',
+                        'ig-pink': '#E1306C',
+                        'ig-orange': '#f97316',
+                        'agent-cyan': '#22d3ee',
+                        'google-brown': '#594a45',
+                        'tiktok-gray': '#080808',
+                        'repurpose-purple': '#A855F7',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 7s ease-in-out infinite',
+                        'marquee': 'marquee 40s linear infinite',
+                        'blob': 'blob 10s infinite',
+                        'draw': 'draw 8s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        draw: {
+                            'from': { 'stroke-dashoffset': 1000 },
+                            'to': { 'stroke-dashoffset': 0 }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="./assets/css/base.css">
+</head>
+<body class="bg-void text-white font-sans antialiased overflow-x-hidden selection:bg-viral-green selection:text-black">
+
+    <div class="bg-noise"></div>
+    <div id="global-spotlight"></div>
+
+    <!-- Ambient Mesh Gradients -->
+    <div class="fixed top-0 left-0 w-full h-screen overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[10%] w-[50rem] h-[50rem] bg-viral-green/5 rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-blob"></div>
+        <div class="absolute top-[40%] right-[-10%] w-[40rem] h-[40rem] bg-purple-900/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-4 md:top-6 left-1/2 transform -translate-x-1/2 z-50 w-[94%] max-w-6xl">
+        <div class="glass-panel rounded-full px-4 md:px-6 py-3 flex items-center justify-between shadow-2xl transition-all duration-300 hover:border-white/20">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-8 h-8 md:w-9 md:h-9 bg-white text-black rounded-lg flex items-center justify-center font-bold text-lg md:text-xl group-hover:bg-viral-green transition-colors duration-300 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span class="font-bold tracking-tight text-base md:text-lg">ViewCreator<span class="text-viral-green">.ai</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-10 text-sm font-medium text-gray-400">
+                <a href="#engine" class="hover:text-white hover:scale-105 transition-all">Tools</a>
+                <a href="#protocol" class="hover:text-white hover:scale-105 transition-all">Protocol</a>
+                <a href="#" class="hover:text-white hover:scale-105 transition-all cursor-default">Pricing</a>
+                <a href="#" class="hover:text-white hover:scale-105 transition-all cursor-default">Blog</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="hidden md:flex group relative px-6 py-2 rounded-full bg-white text-black font-bold text-sm overflow-hidden hover:bg-viral-green hover:shadow-[0_0_20px_rgba(0,255,148,0.4)] transition-all duration-300 cursor-default">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Start Creating <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                </button>
+                <button class="md:hidden text-white text-xl p-2"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-center px-4 pt-24 md:pt-20">
+        <div class="text-center z-10 max-w-5xl mx-auto mb-12">
+            <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-glass-border bg-white/5 text-[10px] md:text-xs font-mono text-viral-green mb-6 md:mb-8">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-viral-green opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-viral-green"></span>
+                </span>
+                <span>SYSTEM V 2.0 ONLINE</span>
+            </div>
+
+            <h1 class="text-5xl md:text-9xl font-black tracking-tighter leading-[0.9] mb-6 md:mb-8 drop-shadow-2xl">
+                <span data-spotlight="green">GO VIRAL.</span><br>
+                <span class="text-white" data-spotlight="green">ON PURPOSE.</span>
+            </h1>
+
+            <p class="text-base md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed px-4">
+                The AI Operating System for <span class="text-white font-medium">400+ creators</span>.
+                Generate thumbnails, scripts, and posts that beat the algorithm.
+            </p>
+        </div>
+
+        <div class="relative w-full max-w-[90%] md:max-w-2xl z-20 flex flex-col items-center gap-8">
+            <div class="w-full relative group transform hover:scale-[1.01] transition-transform duration-300 z-20">
+                <div class="absolute -inset-[1px] bg-gradient-to-r from-viral-green via-white to-blue-500 rounded-2xl opacity-30 group-hover:opacity-70 transition duration-500 blur-sm"></div>
+                <div class="relative glass-panel rounded-2xl p-2 flex items-center bg-[#0a0a0a]">
+                    <div class="pl-4 md:pl-6 pr-2 md:pr-4 text-gray-500 text-lg md:text-xl">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <input type="text" id="heroInput" readonly class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-base md:text-xl font-mono text-white placeholder-gray-600 h-14 md:h-16 tracking-tight" placeholder="Initialize creation...">
+                    <button onclick="document.getElementById('engine').scrollIntoView({behavior: 'smooth'})" class="bg-white text-black font-bold px-4 md:px-8 py-3 md:py-4 rounded-xl hover:bg-viral-green transition-colors shadow-lg flex items-center gap-2 whitespace-nowrap text-sm md:text-base">
+                        <span>Generate</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative w-full flex justify-center gap-6 mt-4">
+                <div class="hidden lg:block w-64 glass-panel rounded-xl p-3 transform rotate-[-4deg] hover:rotate-0 animate-float shadow-2xl transition-all duration-300 z-10">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">THUMBNAIL_GEN.PNG</span>
+                        <i class="fa-brands fa-youtube text-red-500"></i>
+                    </div>
+                    <div class="bg-gray-800 h-28 rounded-lg mb-2 relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&q=80&w=300" class="w-full h-full object-cover opacity-70" alt="Thumbnail">
+                    </div>
+                    <div class="text-viral-green flex items-center gap-2 font-mono text-xs">
+                        <span class="w-1.5 h-1.5 bg-viral-green rounded-full animate-pulse"></span>
+                        Views: 1.2M
+                    </div>
+                </div>
+
+                <div class="hidden lg:block w-64 glass-panel rounded-xl p-4 transform rotate-[4deg] hover:rotate-0 animate-float-delayed border-t-2 border-tiktok-gray/50 shadow-2xl transition-all duration-300 z-10">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-mono text-gray-400 uppercase">SCRIPT_WRITER.TXT</span>
+                        <i class="fa-brands fa-tiktok text-white"></i>
+                    </div>
+                    <div class="space-y-2 font-mono text-xs">
+                        <div class="text-viral-green flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-viral-green rounded-full animate-pulse"></span>
+                            Hook Generated
+                        </div>
+                        <div class="text-white leading-relaxed p-2 bg-white/5 rounded border-l-2 border-white/20">
+                            "3 AI tools that are technically illegal to know..."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Ticker (Treadmill) - Cleaned Up -->
+    <div class="w-full border-y border-white/5 bg-black/40 backdrop-blur-sm py-6 overflow-hidden relative z-30">
+        <div class="flex animate-marquee whitespace-nowrap items-center w-max">
+            <!-- Content Set 1 -->
+            <div class="flex items-center gap-24 mx-8">
+                <div class="flex items-center gap-4"><i class="fa-brands fa-youtube text-xl text-yt-red"></i><span class="font-mono text-xs md:text-sm">Top 1% Channels Use ViewCreator</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Doubled my retention." - Sarah K.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-tiktok text-xl text-white"></i><span class="font-mono text-xs md:text-sm">10M+ Views Generated</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                     <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Scripts are frighteningly good." - Raoul J.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-instagram text-xl text-ig-pink"></i><span class="font-mono text-xs md:text-sm">Automated Reel Scheduling</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Saved 20hrs/mo." - @AgencyFlow</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-google text-xl text-[#4285F4]"></i><span class="font-mono text-xs md:text-sm">Google SEO Optimizer</span></div>
+
+                <div class="flex items-center gap-4"><i class="fa-solid fa-robot text-xl text-white"></i><span class="font-mono text-xs md:text-sm">Your Personalized Agents Builder</span></div>
+
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/men/41.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Booked 5 brand deals in a week." - Leo M.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-solid fa-users text-xl text-viral-green"></i><span class="font-mono text-xs md:text-sm">Joined by 400+ Creators</span></div>
+            </div>
+            
+            <!-- Content Set 1 DUPLICATE -->
+            <div class="flex items-center gap-24 mx-8">
+                <div class="flex items-center gap-4"><i class="fa-brands fa-youtube text-xl text-yt-red"></i><span class="font-mono text-xs md:text-sm">Top 1% Channels Use ViewCreator</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span>"Doubled my retention." - Sarah K.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-tiktok text-xl text-white"></i><span class="font-mono text-xs md:text-sm">10M+ Views Generated</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                     <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span>"Scripts are frighteningly good." - Raoul J.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-instagram text-xl text-ig-pink"></i><span class="font-mono text-xs md:text-sm">Automated Reel Scheduling</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span>"Saved 20hrs/mo." - @AgencyFlow</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-google text-xl text-[#4285F4]"></i><span class="font-mono text-xs md:text-sm">Google SEO Optimizer</span></div>
+
+                <div class="flex items-center gap-4"><i class="fa-solid fa-robot text-xl text-white"></i><span class="font-mono text-xs md:text-sm">Your Personalized Agents Builder</span></div>
+
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/men/41.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span>"Booked 5 brand deals in a week." - Leo M.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-solid fa-users text-xl text-viral-green"></i><span class="font-mono text-xs md:text-sm">Joined by 400+ Creators</span></div>
+            </div>
+            
+            <!-- Content Set 1 DUPLICATE -->
+            <div class="flex items-center gap-24 mx-8">
+                <div class="flex items-center gap-4"><i class="fa-brands fa-youtube text-xl text-yt-red"></i><span class="font-mono text-xs md:text-sm">Top 1% Channels Use ViewCreator</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Doubled my retention." - Sarah K.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-tiktok text-xl text-white"></i><span class="font-mono text-xs md:text-sm">10M+ Views Generated</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                     <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Scripts are frighteningly good." - Raoul J.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-instagram text-xl text-ig-pink"></i><span class="font-mono text-xs md:text-sm">Automated Reel Scheduling</span></div>
+                
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Saved 20hrs/mo." - @AgencyFlow</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-brands fa-google text-xl text-[#4285F4]"></i><span class="font-mono text-xs md:text-sm">Google SEO Optimizer</span></div>
+
+                <div class="flex items-center gap-4"><i class="fa-solid fa-robot text-xl text-white"></i><span class="font-mono text-xs md:text-sm">Your Personalized Agents Builder</span></div>
+
+                <div class="flex items-center gap-3 font-mono text-xs md:text-sm text-white">
+                    <img src="https://randomuser.me/api/portraits/men/41.jpg" class="w-8 h-8 rounded-full border border-white/20 transition-all">
+                    <span class="text-white">"Booked 5 brand deals in a week." - Leo M.</span>
+                </div>
+
+                <div class="flex items-center gap-4"><i class="fa-solid fa-users text-xl text-viral-green"></i><span class="font-mono text-xs md:text-sm">Joined by 400+ Creators</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bento Grid: The Engine -->
+    <section id="engine" class="py-20 md:py-32 px-4 relative z-20 max-w-7xl mx-auto">
+        
+        <!-- Section Header (Subtitle updated) -->
+        <div class="mb-20 md:mb-32 text-center max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-8xl font-black uppercase mb-6 tracking-tighter" data-spotlight="green">THE ENGINE</h2>
+            <p class="text-gray-400 text-lg md:text-xl">
+                Select a module. Auto-generate. Deploy.
+            </p>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 auto-rows-auto gap-6" id="bento-grid">
+            
+            <!-- ROW 1 -->
+            
+            <!-- Card 1: YouTube Thumbnail Generator (Red) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-2 flex flex-col justify-between group hover:border-yt-red/60 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-yt-red group-hover:bg-yt-red group-hover:text-white transition-all shadow-[0_0_15px_rgba(255,0,0,0.1)]">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="card-tag text-yt-red border-yt-red/30 bg-red-900/20">LIVE</div>
+                </div>
+                <div class="w-full flex-1 bg-void-light rounded-2xl p-4 border border-white/5 relative flex flex-col justify-center group-hover:border-yt-red/20 transition-colors">
+                     <div class="flex gap-3 mb-3">
+                        <div class="w-1/2 aspect-video bg-gray-800 rounded-lg overflow-hidden border border-yt-red/50 relative">
+                            <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover">
+                            <div class="absolute bottom-2 right-2 bg-yt-red text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow-lg">WINNER</div>
+                        </div>
+                        <div class="w-1/2 aspect-video bg-gray-800 rounded-lg overflow-hidden border border-white/10 relative opacity-50 group-hover:opacity-80 transition-opacity">
+                            <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover grayscale contrast-125">
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-2 text-[10px] font-mono text-gray-500">
+                        <span>A/B Simulation</span>
+                        <span class="text-yt-red font-bold">CTR Boost: +14%</span>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-1">YouTube Thumbnail Generator</h3>
+                    <p class="text-sm text-gray-400">AI-generated, click-proven thumbnail compositions.</p>
+                </div>
+            </div>
+
+            <!-- Card 2: TikTok Trend Remix Lab (Black) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-white/20 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-white group-hover:bg-white group-hover:text-black transition-all">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div class="card-tag text-white border-white/30 bg-white/10">AUDIO</div>
+                </div>
+                <div class="flex flex-col justify-center gap-3 mt-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-[10px] text-white"></i>
+                        <div class="flex-1 h-4 bg-white/5 rounded flex items-end pb-1 gap-[1px] px-1">
+                             <div class="w-1 h-2 bg-white/50"></div><div class="w-1 h-3 bg-white/80"></div><div class="w-1 h-2 bg-white/50"></div>
+                        </div>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-microphone text-[10px] text-gray-400"></i>
+                        <div class="flex-1 h-4 bg-white/5 rounded flex items-end pb-1 gap-[1px] px-1">
+                             <div class="w-1 h-1 bg-white/20"></div><div class="w-1 h-2 bg-white/40"></div><div class="w-1 h-1 bg-white/20"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                         <div class="px-2 py-0.5 rounded border border-white/30 text-[8px] text-white bg-white/10">
+                             <i class="fa-solid fa-rotate mr-1"></i> REMIXING
+                         </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">TikTok Trend Remix Lab</h3>
+                    <p class="text-xs text-gray-400">Blend current audio trends with your brand voice.</p>
+                </div>
+            </div>
+
+            <!-- Card 3: X Thread Architect (Dark Yellow) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-x-yellow/40 transition-colors bg-[#080808] transition-transform duration-300 hover:scale-[1.02]">
+                 <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-x-yellow group-hover:bg-x-yellow group-hover:text-white transition-all">
+                        <span class="font-sans font-black">X</span>
+                    </div>
+                    <div class="card-tag text-x-yellow border-x-yellow/30 bg-x-yellow/10">COPY</div>
+                </div>
+                <div class="flex flex-col items-start pl-2 gap-0.5 py-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div class="flex gap-2 items-start">
+                        <div class="w-2 h-2 rounded-full bg-x-yellow mt-1"></div>
+                        <div class="w-20 h-2 bg-gray-700 rounded"></div>
+                    </div>
+                    <div class="w-0.5 h-3 bg-gray-800 ml-0.5"></div>
+                    <div class="flex gap-2 items-start">
+                        <div class="w-2 h-2 rounded-full bg-gray-500 mt-1"></div>
+                        <div class="w-16 h-2 bg-gray-800 rounded"></div>
+                    </div>
+                    <div class="w-0.5 h-3 bg-gray-800 ml-0.5"></div>
+                     <div class="flex gap-2 items-start">
+                        <div class="w-2 h-2 rounded-full bg-gray-500 mt-1"></div>
+                        <div class="w-12 h-2 bg-gray-800 rounded"></div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">X Thread Architect</h3>
+                    <p class="text-xs text-gray-400">Multi-post narratives with engagement hooks.</p>
+                </div>
+            </div>
+
+            <!-- ROW 2 -->
+
+            <!-- Card 4: Instagram Reel Script Builder (Pink) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-ig-pink/40 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-ig-pink group-hover:bg-ig-pink group-hover:text-white transition-all">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div class="card-tag text-ig-pink border-ig-pink/30 bg-ig-pink/10">REELS</div>
+                </div>
+                <div class="bg-void-light border border-white/10 rounded-xl p-3 h-24 overflow-hidden relative">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-void-light z-10"></div>
+                    <p class="font-mono text-[8px] text-gray-400 leading-relaxed">
+                        <span class="text-ig-pink">[0:00]</span> Face camera.<br>
+                        <span class="text-white">"Stop making this mistake..."</span><br>
+                        <span class="text-ig-pink">[0:03]</span> Show screen.<br>
+                        <span class="text-white">"Tap settings, then..."</span>
+                    </p>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">Instagram Reel Script Builder</h3>
+                    <p class="text-xs text-gray-400">Paced scripts with visual & audio cues.</p>
+                </div>
+            </div>
+
+            <!-- Card 5: Video Highlight Clip Generator (Purple) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-2 flex flex-col justify-between group hover:border-repurpose-purple/40 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                 <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-repurpose-purple group-hover:bg-repurpose-purple group-hover:text-white transition-all">
+                        <i class="fa-solid fa-scissors"></i>
+                    </div>
+                    <div class="card-tag text-repurpose-purple border-repurpose-purple/30 bg-repurpose-purple/10">REPURPOSE</div>
+                </div>
+                <div class="w-full flex flex-col gap-2">
+                    <!-- Removed overflow-hidden from this container -->
+                    <div class="w-full h-12 bg-gray-800 rounded-lg relative border border-white/5 flex items-center px-2 gap-0.5">
+                        <div class="w-1 h-3 bg-gray-600 rounded-full"></div><div class="w-1 h-5 bg-gray-600 rounded-full"></div>
+                        <div class="w-1 h-8 bg-repurpose-purple rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+                        <div class="w-1 h-6 bg-repurpose-purple rounded-full"></div>
+                        <div class="w-1 h-4 bg-repurpose-purple rounded-full"></div>
+                        <div class="w-1 h-7 bg-repurpose-purple rounded-full"></div>
+                        <div class="w-1 h-3 bg-gray-600 rounded-full"></div>
+                        
+                        <div class="absolute left-[40%] top-0 h-full w-0.5 bg-white z-10"></div>
+                        <!-- "CUT" element with z-20 -->
+                        <div class="absolute left-[40%] -top-2 text-white text-[10px] transform -translate-x-1/2 bg-purple-600 px-1 rounded z-20">CUT</div>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-1">Video Highlight Clip Generator</h3>
+                    <p class="text-sm text-gray-400">Turn long videos into viral <30s clips.</p>
+                </div>
+            </div>
+
+            <!-- Card 6: Google SEO Blog Generator (Brown) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-google-brown/40 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-google-brown group-hover:bg-google-brown group-hover:text-white transition-all">
+                        <i class="fa-brands fa-google"></i>
+                    </div>
+                    <div class="card-tag text-google-brown border-google-brown/30 bg-google-brown/10">SEO</div>
+                </div>
+                <div class="bg-void-light border border-white/5 p-2 rounded text-[8px] font-sans">
+                    <div class="flex items-center gap-1 mb-1">
+                         <div class="w-2 h-2 rounded-full bg-google-brown"></div>
+                         <div class="text-gray-400">yoursite.com</div>
+                    </div>
+                    <div class="text-google-brown font-bold text-[9px] mb-0.5 truncate">How to go viral in 2025</div>
+                    <div class="text-gray-500 leading-tight">Complete guide to creator growth...</div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">Google SEO Blog Generator</h3>
+                    <p class="text-xs text-gray-400">Long-form posts tuned for rank #1.</p>
+                </div>
+            </div>
+
+            <!-- ROW 3 -->
+
+            <!-- Card 7: Social Media Multi Agent (Cyan) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-agent-cyan/40 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                 <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-agent-cyan group-hover:bg-agent-cyan group-hover:text-white transition-all">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="card-tag text-agent-cyan border-agent-cyan/30 bg-agent-cyan/10">AGENT</div>
+                </div>
+                <div class="relative flex items-center justify-center h-12">
+                    <div class="w-8 h-8 rounded-full bg-agent-cyan/20 border border-agent-cyan flex items-center justify-center z-10">
+                        <i class="fa-solid fa-bolt text-agent-cyan text-[10px]"></i>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 w-full h-[1px] -translate-x-1/2 -translate-y-1/2 bg-white/10"></div>
+                    <div class="absolute left-2 bg-black p-1 rounded-full border border-white/10"><i class="fa-brands fa-youtube text-[8px] text-yt-red"></i></div>
+                    <div class="absolute right-2 bg-black p-1 rounded-full border border-white/10"><span class="text-[8px] font-sans font-bold text-x-yellow">X</span></div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">Social Media Multi Agent</h3>
+                    <p class="text-xs text-gray-400">Deploy autonomous agents across every channel.</p>
+                </div>
+            </div>
+
+            <!-- Card 8: Facebook Ad Copy Optimizer (FB Blue) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-fb-blue/40 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-fb-blue group-hover:bg-fb-blue group-hover:text-white transition-all">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </div>
+                    <div class="card-tag text-fb-blue border-fb-blue/30 bg-fb-blue/10">ADS</div>
+                </div>
+                <div class="bg-white/5 p-2 rounded border border-white/5 relative">
+                    <div class="text-[6px] text-gray-500 mb-1">Sponsored</div>
+                    <div class="flex items-center gap-1 mb-1.5">
+                        <div class="w-3 h-3 bg-gray-600 rounded-full"></div>
+                        <div class="w-10 h-1 bg-gray-600 rounded-full"></div>
+                    </div>
+                    <div class="w-full h-6 bg-fb-blue/20 rounded flex items-center justify-center text-[6px] text-fb-blue font-bold">SIGN UP</div>
+                </div>
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">Facebook Ad Copy Optimizer</h3>
+                    <p class="text-xs text-gray-400">High-converting headlines & primary text.</p>
+                </div>
+            </div>
+
+            <!-- Card 9: Instagram Carousel Caption Studio (Orange) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-between group hover:border-ig-orange/40 transition-colors transition-transform duration-300 hover:scale-[1.02]">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-2xl text-ig-orange group-hover:bg-ig-orange group-hover:text-white transition-all">
+                        <i class="fa-regular fa-images"></i>
+                    </div>
+                    <div class="card-tag text-ig-orange border-ig-orange/30 bg-ig-orange/10">CAROUSEL</div>
+                </div>
+                
+                <div class="flex flex-col items-center gap-2 mt-1">
+                    <div class="w-16 h-12 bg-white/5 rounded border border-white/10 flex items-center justify-center">
+                        <i class="fa-solid fa-mountain-sun text-white/20 text-[10px]"></i>
+                    </div>
+                    <div class="flex justify-center gap-1">
+                        <div class="w-1.5 h-1.5 rounded-full bg-ig-orange animate-bounce"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-white/20 animate-bounce delay-75"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-white/20 animate-bounce delay-150"></div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h3 class="text-lg md:text-xl font-bold text-white mb-1">Instagram Carousel Caption Studio</h3>
+                    <p class="text-xs text-gray-400">Slide-by-slide captions that drive swipes.</p>
+                </div>
+            </div>
+
+            <!-- Card 10: Explore More (Viral Green) -->
+            <div class="bento-item glass-panel rounded-[2rem] p-6 md:p-8 col-span-1 md:col-span-1 flex flex-col justify-center items-center text-center group hover:bg-white/5 hover:border-viral-green/40 transition-colors border-dashed border border-white/20 cursor-pointer transition-transform duration-300 hover:scale-[1.02]">
+                <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-xl mb-4 group-hover:bg-viral-green group-hover:text-black group-hover:scale-110 transition-all">
+                    <i class="fa-solid fa-arrow-right text-viral-green group-hover:text-black"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-1">And Many More</h3>
+                <p class="text-xs text-gray-400">Explore the full 25+ tool library.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Protocol Section (Timeline) -->
+    <section id="protocol" class="py-20 md:py-32 px-4 border-t border-white/5 bg-[#050505] overflow-hidden">
+        <div class="text-center mb-20 md:mb-24 max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-8xl font-black uppercase mb-6 tracking-tighter" data-spotlight="green">The Protocol</h2>
+            <p class="text-gray-400 text-lg md:text-xl">Three steps to viral dominance.</p>
+        </div>
+
+        <div class="relative max-w-4xl mx-auto pb-0 md:pb-[20px]"> <!-- Timeline spacing tuned -->
+            
+            <!-- SVG Path (Static Dashed Line, Extended) -->
+            <svg class="hidden md:block absolute inset-0 w-full h-full z-0 opacity-60 pointer-events-none" viewBox="0 0 500 320" preserveAspectRatio="none">
+                <!-- Step connectors only -->
+                <path d="M 120 60 C 310 120 330 165 300 200" stroke="#00FF94" stroke-width="2.5" fill="none" stroke-dasharray="10 14" />
+                <path d="M 300 200 C 235 250 250 280 250 295" stroke="#00FF94" stroke-width="2.5" fill="none" stroke-dasharray="10 14" />
+            </svg>
+            
+            <!-- Card Container -->
+            <div class="relative z-10 flex flex-col gap-12 md:gap-20 pb-0">
+                
+                <!-- Card 1 (Top-Left) -->
+                <div class="glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 bg-[#0a0a0a] flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-center shadow-2xl transition-transform hover:scale-[1.01] md:w-3/4 md:self-start md:-translate-x-12">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-viral-green flex items-center justify-center text-black font-bold text-2xl shrink-0 shadow-[0_0_30px_rgba(0,255,148,0.3)]">01</div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl md:text-3xl font-bold mb-3 text-white">Pick Your Channel</h3>
+                        <p class="text-gray-400 text-base md:text-lg leading-relaxed">Tell ViewCreator which platform you’re targeting and launch the matching tool module. Every workspace loads presets for that algorithm automatically.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 (Mid-Right) -->
+
+                <div class="glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 bg-[#111] flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-center shadow-2xl transition-transform hover:scale-[1.01] md:w-3/4 md:self-end md:mt-10 md:translate-x-12">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-viral-green flex items-center justify-center text-black font-bold text-2xl shrink-0 shadow-[0_0_30px_rgba(0,255,148,0.3)]">02</div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl md:text-3xl font-bold mb-3 text-white">Generate & Refine</h3>
+                        <p class="text-gray-400 text-base md:text-lg leading-relaxed">Agents create thumbnails, scripts, captions, and cut-downs with performance predictions baked in. Adjust prompts or brand kits and watch updates stream in instantly.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 (Bottom-Left) -->
+                <div class="glass-panel p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 bg-[#161616] flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-center shadow-2xl border-b-4 border-viral-green transition-transform hover:scale-[1.01] md:w-3/4 md:self-start md:mt-10 md:-translate-x-12">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-viral-green flex items-center justify-center text-black font-bold text-2xl shrink-0 shadow-[0_0_30px_rgba(0,255,148,0.3)]">03</div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl md:text-3xl font-bold mb-3 text-white">Publish & Track</h3>
+                        <p class="text-gray-400 text-base md:text-lg leading-relaxed">Export finished assets to your calendar, hand them to clients for approval, or push directly to channels. Performance data flows back into ViewCreator so every next run is smarter.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 md:py-32 px-4 bg-[#030303] border-t border-b border-white/5 relative overflow-hidden">
+        <div class="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-viral-green/5 to-transparent pointer-events-none"></div>
+        <div class="relative max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-glass-border bg-white/5 text-[10px] md:text-xs font-mono text-viral-green tracking-[0.25em] uppercase">FAQ</span>
+                <h2 class="text-4xl md:text-6xl font-black mt-6 mb-4">Answers to your most common questions</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <article class="glass-panel rounded-3xl p-8 border border-white/10 hover:border-viral-green/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4 text-viral-green font-mono text-xs tracking-[0.2em] uppercase">
+                        <span class="w-2 h-2 rounded-full bg-viral-green animate-pulse"></span>
+                        01
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">How does ViewCreator compare to other AI content generators?</h3>
+                    <p class="text-gray-400 leading-relaxed">ViewCreator bundles AI generation, autonomous agents, reusable templates, and credit controls into one workspace, so social teams stop hopping between tools for prompts or handoffs and run every workflow from a single dashboard.</p>
+                </article>
+
+                <article class="glass-panel rounded-3xl p-8 border border-white/10 hover:border-viral-green/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4 text-viral-green font-mono text-xs tracking-[0.2em] uppercase">
+                        <span class="w-2 h-2 rounded-full bg-viral-green animate-pulse"></span>
+                        02
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Can I collaborate with my team and clients?</h3>
+                    <p class="text-gray-400 leading-relaxed">Yes. Invite teammates to shared libraries, assign ownership on workflow steps, and capture approvals via comments. Clients can review live previews without needing full licenses.</p>
+                </article>
+
+                <article class="glass-panel rounded-3xl p-8 border border-white/10 hover:border-viral-green/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4 text-viral-green font-mono text-xs tracking-[0.2em] uppercase">
+                        <span class="w-2 h-2 rounded-full bg-viral-green animate-pulse"></span>
+                        03
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Do I need design or video experience to use it?</h3>
+                    <p class="text-gray-400 leading-relaxed">Not at all. Start from guided prompts, drag-and-drop media slots, and AI-assisted storyboards. You can upload brand kits and the agents will maintain fonts, colors, and tone automatically.</p>
+                </article>
+
+                <article class="glass-panel rounded-3xl p-8 border border-white/10 hover:border-viral-green/40 transition-all">
+                    <div class="flex items-center gap-3 mb-4 text-viral-green font-mono text-xs tracking-[0.2em] uppercase">
+                        <span class="w-2 h-2 rounded-full bg-viral-green animate-pulse"></span>
+                        04
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Which platforms and formats are supported?</h3>
+                    <p class="text-gray-400 leading-relaxed">We cover short- and long-form content for Instagram, TikTok, YouTube, X, Facebook, LinkedIn, and Google SEO. New platform tools roll out monthly.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black pt-12 pb-6 px-4 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col gap-12 md:gap-16">
+            <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 lg:gap-16">
+                <!-- Left Columns -->
+                <div class="w-full basis-0 lg:flex-1 lg:pl-11">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-10 text-center sm:text-left">
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Product</h4>
+                            <ul class="space-y-2 text-gray-400">
+                                <li><a href="#" class="hover:text-white transition-colors">Home</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">AI Agents</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">All Tools</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">Tool Library</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Platforms</h4>
+                            <ul class="space-y-2 text-gray-400">
+                                <li><a href="#" class="hover:text-white transition-colors">YouTube</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">Instagram</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">TikTok</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">X (Twitter)</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">Facebook</a></li>
+                                <li><a href="#" class="hover:text-white transition-colors">Google</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="w-full max-w-md flex flex-col gap-6 items-center text-center">
+                    <h2 class="text-3xl md:text-5xl font-black text-white whitespace-nowrap">READY TO SHIP?</h2>
+                    <button class="w-full max-w-[260px] px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-viral-green transition-colors text-lg shadow-[0_0_30px_rgba(255,255,255,0.2)] cursor-default whitespace-nowrap text-center">
+                        Get Started for Free
+                    </button>
+                </div>
+
+                <!-- Right Columns -->
+                <div class="w-full basis-0 lg:flex-1 lg:pl-11">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-10 text-center sm:text-left">
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Resources</h4>
+                            <ul class="space-y-2 text-gray-400">
+                                <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-semibold text-lg mb-4">Company</h4>
+                            <ul class="space-y-2 text-gray-400">
+                                <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col items-center gap-4 mt-[-40px]">
+                <div class="flex items-center gap-4 text-2xl text-white/70">
+                    <a href="#" class="hover:text-viral-green transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-viral-green transition-colors"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="hover:text-viral-green transition-colors font-black text-xl">X</a>
+                    <a href="#" class="hover:text-viral-green transition-colors"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" class="hover:text-viral-green transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+                <div class="text-center text-gray-500 text-sm font-mono">© 2025 ViewCreator.ai</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./assets/js/app.js"></script>
+</body>
+</html>
