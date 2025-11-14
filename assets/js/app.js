@@ -129,4 +129,171 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('mobileMenu')
     );
     initSeamlessMarquee();
+    initContactModal(
+        document.getElementById('contactTrigger'),
+        document.getElementById('contactModal')
+    );
+    initContactForm(document.getElementById('contactForm'));
 });
+const CONTACT_ENDPOINT = null;
+function closeContactModal() {
+    const modal = document.getElementById('contactModal');
+    const trigger = document.getElementById('contactTrigger');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    if (trigger) trigger.focus();
+}
+function showContactToast() {
+    const toast = document.getElementById('contactToast');
+    if (!toast) return;
+    toast.classList.remove('hidden');
+    setTimeout(() => {
+        toast.classList.add('hidden');
+    }, 4000);
+}
+
+function initContactModal(trigger, modal) {
+    if (!trigger || !modal) return;
+    const overlay = modal.querySelector('.absolute');
+    const closeBtn = document.getElementById('contactClose');
+    const cancelBtn = document.getElementById('contactCancel');
+    let lastFocused = null;
+
+    function getFocusable() {
+        return Array.from(modal.querySelectorAll('a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])')).filter(el => !el.disabled && el.offsetParent !== null);
+    }
+
+    function open() {
+        lastFocused = document.activeElement;
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        trigger.setAttribute('aria-expanded', 'true');
+        const first = document.getElementById('contactName');
+        if (first) first.focus();
+        document.addEventListener('keydown', onKeyDown);
+    }
+
+    function close() {
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        trigger.setAttribute('aria-expanded', 'false');
+        document.removeEventListener('keydown', onKeyDown);
+        if (lastFocused) lastFocused.focus();
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            close();
+            return;
+        }
+        if (e.key === 'Tab') {
+            const focusable = getFocusable();
+            if (!focusable.length) return;
+            const index = focusable.indexOf(document.activeElement);
+            if (e.shiftKey) {
+                if (index <= 0) {
+                    e.preventDefault();
+                    focusable[focusable.length - 1].focus();
+                }
+            } else {
+                if (index === focusable.length - 1) {
+                    e.preventDefault();
+                    focusable[0].focus();
+                }
+            }
+        }
+    }
+
+    trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        open();
+    });
+    if (overlay) overlay.addEventListener('click', close);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (cancelBtn) cancelBtn.addEventListener('click', close);
+}
+
+function initContactForm(form) {
+    if (!form) return;
+    const nameEl = document.getElementById('contactName');
+    const emailEl = document.getElementById('contactEmail');
+    const messageEl = document.getElementById('contactMessage');
+    const honeypotEl = document.getElementById('contactWebsite');
+    const submitBtn = document.getElementById('contactSubmit');
+    const errorsEl = document.getElementById('contactErrors');
+    const statusEl = document.getElementById('contactStatus');
+
+    function setErrors(msg) {
+        if (!errorsEl) return;
+        if (msg) {
+            errorsEl.textContent = msg;
+            errorsEl.classList.remove('hidden');
+        } else {
+            errorsEl.textContent = '';
+            errorsEl.classList.add('hidden');
+        }
+    }
+
+    function setStatus(msg) {
+        if (!statusEl) return;
+        statusEl.textContent = msg || '';
+        if (msg) statusEl.classList.remove('hidden'); else statusEl.classList.add('hidden');
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = (nameEl?.value || '').trim();
+        const email = (emailEl?.value || '').trim();
+        const message = (messageEl?.value || '').trim();
+        const honeypot = (honeypotEl?.value || '').trim();
+
+        if (honeypot) return;
+
+        if (name.length < 2) {
+            setErrors('Please enter your name.');
+            return;
+        }
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+            setErrors('Please enter a valid email.');
+            return;
+        }
+        if (message.length < 10) {
+            setErrors('Please enter a longer message.');
+            return;
+        }
+
+        setErrors('');
+        submitBtn?.setAttribute('disabled', 'true');
+        const originalText = submitBtn?.textContent || '';
+        if (submitBtn) submitBtn.textContent = 'Sending…';
+
+        try {
+            if (CONTACT_ENDPOINT) {
+                const controller = new AbortController();
+                const t = setTimeout(() => controller.abort(), 10000);
+                const res = await fetch(CONTACT_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, message }),
+                    signal: controller.signal
+                });
+                clearTimeout(t);
+                if (!res.ok) throw new Error('Request failed');
+            } else {
+                await new Promise(r => setTimeout(r, 800));
+            }
+            setStatus('Sent successfully.');
+            form.reset();
+            closeContactModal();
+            showContactToast();
+        } catch {
+            setErrors('Something went wrong. Please try again.');
+        } finally {
+            if (submitBtn) submitBtn.textContent = originalText;
+            submitBtn?.removeAttribute('disabled');
+        }
+    });
+}

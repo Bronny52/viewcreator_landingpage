@@ -101,10 +101,34 @@
                         Start Creating <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
                     </span>
                 </button>
-                <button class="md:hidden text-white text-xl p-2"><i class="fa-solid fa-bars"></i></button>
+                <button id="mobileMenuButton" aria-controls="mobileMenu" aria-expanded="false" class="md:hidden text-white text-xl p-2"><i class="fa-solid fa-bars"></i></button>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobileMenu" class="md:hidden hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-6xl">
+        <div class="glass-panel rounded-2xl p-4 border border-white/10">
+            <div class="grid grid-cols-1 gap-3 text-sm font-medium">
+                <a href="#engine" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5">
+                    <span>Tools</span>
+                    <i class="fa-solid fa-arrow-right text-white/50"></i>
+                </a>
+                <a href="#protocol" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5">
+                    <span>Protocol</span>
+                    <i class="fa-solid fa-arrow-right text-white/50"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5">
+                    <span>Pricing</span>
+                    <i class="fa-solid fa-arrow-right text-white/50"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5">
+                    <span>Blog</span>
+                    <i class="fa-solid fa-arrow-right text-white/50"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="relative min-h-[90vh] md:min-h-screen flex flex-col items-center justify-center px-4 pt-16 md:pt-12">
@@ -700,7 +724,7 @@
                         <div>
                             <h4 class="text-white font-semibold text-lg mb-4">Company</h4>
                             <ul class="space-y-2 text-gray-400">
-                                <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                                <li><a href="#" id="contactTrigger" aria-controls="contactModal" aria-expanded="false" class="hover:text-white transition-colors">Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -720,6 +744,33 @@
         </div>
     </footer>
 
+    <div id="contactModal" class="fixed inset-0 hidden z-[1000] flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="relative glass-panel rounded-2xl p-6 w-[92%] max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-white">Contact</h3>
+                <button id="contactClose" class="text-white/70 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="contactForm" class="space-y-4">
+                <input type="text" id="contactName" name="name" placeholder="Name" class="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-viral-green focus:outline-none" required>
+                <input type="email" id="contactEmail" name="email" placeholder="Email" class="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-viral-green focus:outline-none" required>
+                <textarea id="contactMessage" name="message" placeholder="Message" class="w-full bg-transparent border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-viral-green focus:outline-none h-28" required></textarea>
+                <input type="text" id="contactWebsite" name="website" class="hidden" tabindex="-1" aria-hidden="true">
+                <div id="contactErrors" aria-live="polite" class="text-viral-green text-xs hidden"></div>
+                <div class="flex items-center justify-end gap-3">
+                    <button type="button" id="contactCancel" class="px-4 py-2 rounded-lg border border-white/10 text-white hover:border-white/30">Cancel</button>
+                    <button type="submit" id="contactSubmit" class="px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-viral-green">Send</button>
+                </div>
+                <div id="contactStatus" class="text-sm text-viral-green hidden">Sent successfully.</div>
+            </form>
+        </div>
+    </div>
+    <div id="contactToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 hidden z-[1000]">
+        <div class="glass-panel rounded-full px-4 py-2 border border-white/10 flex items-center gap-2" aria-live="polite">
+            <span class="w-2 h-2 rounded-full bg-viral-green animate-pulse"></span>
+            <span class="text-sm">Message sent. We’ll be in touch.</span>
+        </div>
+    </div>
     <script src="./assets/js/app.js"></script>
 </body>
 </html>
